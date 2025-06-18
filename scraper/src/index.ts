@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import { scrapeAmazon } from './amazonScraper';
 import { scrapeEbay } from './ebayScraper';
+import { scrapeWalmart } from './walmartScraper';
+import { scrapeAliExpress } from './aliexpressScraper';
 import { pool } from './db';
 import type { RowDataPacket } from 'mysql2';
 
@@ -57,7 +59,9 @@ app.get('/api/products', (req: Request, res: Response, next) => {
         // 3. Scrape new data
         const amazonResults = await scrapeAmazon(q);
         const ebayResults = await scrapeEbay(q);
-        const allResults = [...amazonResults, ...ebayResults];
+        const walmartResults = await scrapeWalmart(q);
+        const aliExpressResults = await scrapeAliExpress(q);
+        const allResults = [...amazonResults, ...ebayResults, ...walmartResults, ...aliExpressResults];
         console.log('Scraped products:', allResults);
         // 4. Save to database (upsert or insert new) using website_id
         for (const product of allResults) {
