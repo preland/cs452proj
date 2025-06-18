@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import { scrapeAmazon } from './amazonScraper';
 import { scrapeEbay } from './ebayScraper';
@@ -8,7 +9,9 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json());
-app.use(require('cors')()); // Enable CORS for all routes
+app.use(require('cors')({
+    origin: ['http://cs452.vercel.app', 'http://localhost:3000'], // add your frontend URL(s)
+}));
 app.get('/api/products', (req: Request, res: Response, next) => {
     (async () => {
         const { q } = req.query;

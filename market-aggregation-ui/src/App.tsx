@@ -24,10 +24,12 @@ const App: React.FC = () => {
         }
     };
 
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api/products';
+
     const fetchProducts = async (term: string): Promise<Product[]> => {
         console.log(`Fetching products for term: ${term}`);
         if (!term) return [];
-        const response = await axios.get('http://localhost:3001/api/products', {
+        const response = await axios.get(API_URL, {
             params: { q: term }
         });
         // Map backend data to Product type if needed
