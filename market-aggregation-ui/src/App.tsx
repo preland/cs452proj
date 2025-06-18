@@ -98,11 +98,11 @@ const App: React.FC = () => {
                 {loading && (
                     <div className="text-center text-blue-600">
                         Loading...
-                        {searchTime !== null && (
-                            <span className="ml-2 text-gray-600">
-                                (Last search took {(searchTime / 1000).toFixed(2)}s)
-                            </span>
-                        )}
+                    </div>
+                )}
+                {!loading && searchTime !== null && (
+                    <div className="text-center text-gray-600 mb-2">
+                        Last search took {(searchTime / 1000).toFixed(2)}s
                     </div>
                 )}
                 {error && <div className="text-center text-red-600">{error}</div>}
