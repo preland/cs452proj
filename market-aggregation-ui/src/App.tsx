@@ -5,31 +5,22 @@ import ProductList from './components/ProductList';
 import Filters from './components/Filters';
 import { Product } from './types';
 
+const WEBSITES = ['amazon', 'walmart', 'aliexpress'];
+
 const App: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [products, setProducts] = useState<Product[]>([]);
     const [filters, setFilters] = useState<{ cost?: number; website?: string }>({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [amazonFailed, setAmazonFailed] = useState(false);
+    const [failedWebsites, setFailedWebsites] = useState<string[]>([]);
 
     const handleSearch = async () => {
         setLoading(true);
         setError(null);
-        setAmazonFailed(false);
+        setFailedWebsites([]);
         try {
             const fetchedProducts: Product[] = await fetchProducts(searchTerm);
-            // Check if any product has website === 'amazon' and cost === null or a special flag
-            if (
-                fetchedProducts.some(
-                    (p) =>
-                        p.website &&
-                        p.website.toLowerCase() === 'amazon' &&
-                        (p.cost === null || p.cost === undefined || p.name === 'Amazon unavailable')
-                )
-            ) {
-                setAmazonFailed(true);
-            }
             setProducts(fetchedProducts);
         } catch (err) {
             setError('Failed to fetch products.');
@@ -48,12 +39,20 @@ const App: React.FC = () => {
                 params: { q: term }
             });
             let products: Product[] = response.data;
-            // Check if Amazon is present
-            const hasAmazon = products.some(p => p.website && p.website.toLowerCase() === 'amazon');
-            setAmazonFailed(!hasAmazon);
+
+            // Check for missing websites
+            const failed: string[] = [];
+            for (const site of WEBSITES) {
+                const hasSite = products.some(
+                    (p) => p.website && p.website.toLowerCase() === site
+                );
+                if (!hasSite) failed.push(site);
+            }
+            setFailedWebsites(failed);
+
             return products;
         } catch (err) {
-            setAmazonFailed(true);
+            setFailedWebsites([...WEBSITES]);
             return [];
         }
     };
@@ -74,9 +73,6 @@ const App: React.FC = () => {
     });
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
-        // Put "Amazon unavailable" at the top
-        if (a.name === 'Amazon unavailable') return -1;
-        if (b.name === 'Amazon unavailable') return 1;
         return (a.cost ?? Infinity) - (b.cost ?? Infinity);
     });
 
@@ -96,9 +92,13 @@ const App: React.FC = () => {
                 </div>
                 {loading && <div className="text-center text-blue-600">Loading...</div>}
                 {error && <div className="text-center text-red-600">{error}</div>}
-                {amazonFailed && !loading && (
+                {failedWebsites.length > 0 && !loading && (
                     <div className="text-center text-yellow-700 bg-yellow-100 border border-yellow-300 rounded py-2 mb-4 font-semibold">
-                        Amazon results are currently unavailable.
+                        {failedWebsites.map(site =>
+                            <span key={site} className="mx-2">
+                                {site.charAt(0).toUpperCase() + site.slice(1)} results are currently unavailable.
+                            </span>
+                        )}
                     </div>
                 )}
                 <ProductList products={sortedProducts} searchMade={products.length > 0 || loading || error !== null } />
