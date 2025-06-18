@@ -28,9 +28,9 @@ const App: React.FC = () => {
         } catch (err) {
             setError('Failed to fetch products.');
         } finally {
-            setLoading(false);
             const end = performance.now();
-            setSearchTime(end - start);
+            setSearchTime(end - start); // <-- Set search time first
+            setLoading(false);          // <-- Then set loading to false
         }
     };
 
