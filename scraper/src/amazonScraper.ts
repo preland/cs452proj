@@ -6,9 +6,8 @@ export async function scrapeAmazon(searchTerm: string) {
     // In production, use APIs or legal data sources.
     const url = `https://www.amazon.com/s?k=${encodeURIComponent(searchTerm)}`;
     const { data } = await axios.get(url, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0'
-        }
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+        timeout: 10000 // 10 seconds
     });
     const $ = cheerio.load(data);
     const results: { name: string; cost: string; url: string; website: string}[] = [];

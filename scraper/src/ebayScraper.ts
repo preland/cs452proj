@@ -4,9 +4,8 @@ import * as cheerio from 'cheerio';
 export async function scrapeEbay(searchTerm: string) {
     const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(searchTerm)}`;
     const { data } = await axios.get(url, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0'
-        }
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+        timeout: 10000 // 10 seconds
     });
     const $ = cheerio.load(data);
     const results: { name: string; cost: string; url: string; website: string }[] = [];

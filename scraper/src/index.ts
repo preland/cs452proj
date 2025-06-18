@@ -48,8 +48,14 @@ app.get('/api/products', (req: Request, res: Response, next) => {
         }
 
         // 3. Scrape new data
+        console.log('Starting Amazon scrape');
         const amazonResults = await scrapeAmazon(q);
+        console.log('Amazon scrape done');
+
+        console.log('Starting eBay scrape');
         const ebayResults = await scrapeEbay(q);
+        console.log('eBay scrape done');
+
         const allResults = [...amazonResults, ...ebayResults];
         console.log('Scraped products:', allResults);
         // 4. Save to database (upsert or insert new) using website_id
