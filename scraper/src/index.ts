@@ -5,6 +5,13 @@ import { scrapeEbay } from './ebayScraper';
 import { pool } from './db';
 import type { RowDataPacket } from 'mysql2';
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
 const app = express();
 const PORT = 3001;
 
