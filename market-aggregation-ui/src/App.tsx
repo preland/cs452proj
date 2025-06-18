@@ -24,7 +24,7 @@ const App: React.FC = () => {
         }
     };
 
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api/products';
+    const API_URL = 'http://ec2-3-14-129-24.us-east-2.compute.amazonaws.com:3001/api/products';
 
     const fetchProducts = async (term: string): Promise<Product[]> => {
         console.log(`Fetching products for term: ${term}`);
