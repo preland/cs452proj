@@ -6,7 +6,7 @@ import { pool } from './db';
 import type { RowDataPacket } from 'mysql2';
 
 const app = express();
-const PORT = 3001;
+const PORT = 443; // Use 443 for HTTPS, or change to 3000 for local development
 
 app.use(express.json());
 app.use(require('cors')({
