@@ -19,16 +19,19 @@ app.get('/api/products', (req: Request, res: Response, next) => {
             return res.status(400).json({ error: 'Missing search query' });
         }
 
+        console.log('Querying websites...');
         // 1. Get all website IDs and names
         const [websites] = await pool.query<RowDataPacket[]>(
             `SELECT id, name FROM websites`
         );
+        console.log('Websites loaded:', websites.length);
         const websiteMap: Record<string, number> = {};
         for (const site of websites) {
             websiteMap[site.name.toLowerCase()] = site.id;
         }
 
         // 2. Check database for recent data (within 4 hours) for all websites
+        console.log('Querying cached products...');
         const [rows] = await pool.query<RowDataPacket[]>(
             `SELECT 
                 products.name, 
@@ -41,6 +44,7 @@ app.get('/api/products', (req: Request, res: Response, next) => {
                AND products.updated_at > (NOW() - INTERVAL 4 HOUR)`,
             [q]
         );
+        console.log('Cached products loaded:', rows.length);
 
         if (rows.length > 0) {
             console.log('Returning cached products:');
