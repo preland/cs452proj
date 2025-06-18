@@ -85,6 +85,8 @@ app.get('/api/products', (req: Request, res: Response, next) => {
     })().catch(next);
 });
 
+console.log('DB_HOST:', process.env.DB_HOST);
+
 app.listen(PORT, () => {
     console.log(`Scraper API listening on port ${PORT}`);
 });
