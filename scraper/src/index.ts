@@ -10,7 +10,7 @@ const PORT = 3001;
 
 app.use(express.json());
 app.use(require('cors')({
-    origin: ['http://cs452.vercel.app', 'http://localhost:3000'], // add your frontend URL(s)
+    origin: ['https://cs452.vercel.app', 'http://localhost:3000'], // add your frontend URL(s)
 }));
 app.get('/api/products', (req: Request, res: Response, next) => {
     (async () => {
