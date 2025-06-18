@@ -14,11 +14,14 @@ const App: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [failedWebsites, setFailedWebsites] = useState<string[]>([]);
+    const [searchTime, setSearchTime] = useState<number | null>(null);
 
     const handleSearch = async () => {
         setLoading(true);
         setError(null);
         setFailedWebsites([]);
+        setSearchTime(null);
+        const start = performance.now();
         try {
             const fetchedProducts: Product[] = await fetchProducts(searchTerm);
             setProducts(fetchedProducts);
@@ -26,6 +29,8 @@ const App: React.FC = () => {
             setError('Failed to fetch products.');
         } finally {
             setLoading(false);
+            const end = performance.now();
+            setSearchTime(end - start);
         }
     };
 
@@ -90,7 +95,16 @@ const App: React.FC = () => {
                     />
                     <Filters onFilterChange={handleFilterChange} />
                 </div>
-                {loading && <div className="text-center text-blue-600">Loading...</div>}
+                {loading && (
+                    <div className="text-center text-blue-600">
+                        Loading...
+                        {searchTime !== null && (
+                            <span className="ml-2 text-gray-600">
+                                (Last search took {(searchTime / 1000).toFixed(2)}s)
+                            </span>
+                        )}
+                    </div>
+                )}
                 {error && <div className="text-center text-red-600">{error}</div>}
                 {failedWebsites.length > 0 && !loading && (
                     <div className="text-center text-yellow-700 bg-yellow-100 border border-yellow-300 rounded py-2 mb-4 font-semibold">
