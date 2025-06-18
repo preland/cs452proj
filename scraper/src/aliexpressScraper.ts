@@ -6,6 +6,7 @@ export async function scrapeAliExpress(searchTerm: string) {
     const headers = { 'User-Agent': 'Mozilla/5.0' };
     try {
         const { data } = await axios.get(url, { headers, timeout: 10000 });
+        console.log(data.slice(0, 1000)); // log the first 1000 chars
         const $ = cheerio.load(data);
         const results: { name: string; cost: string; url: string; website: string }[] = [];
 
