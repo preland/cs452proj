@@ -79,7 +79,7 @@ const App: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-blue-600 py-6 shadow">
-                <h1 className="text-3xl font-bold text-center text-white">Market Aggregation</h1>
+                <h1 className="text-3xl font-bold text-center text-white">PricePilot</h1>
             </header>
             <main className="max-w-4xl mx-auto mt-8 p-6 bg-white rounded-lg shadow">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
