@@ -6,7 +6,7 @@ import { pool } from './db';
 import type { RowDataPacket } from 'mysql2';
 
 const app = express();
-const PORT = 443; // Use 443 for HTTPS, or change to 3000 for local development
+const PORT = 3001;
 
 app.use(express.json());
 app.use(require('cors')({
@@ -19,19 +19,16 @@ app.get('/api/products', (req: Request, res: Response, next) => {
             return res.status(400).json({ error: 'Missing search query' });
         }
 
-        console.log('Querying websites...');
         // 1. Get all website IDs and names
         const [websites] = await pool.query<RowDataPacket[]>(
             `SELECT id, name FROM websites`
         );
-        console.log('Websites loaded:', websites.length);
         const websiteMap: Record<string, number> = {};
         for (const site of websites) {
             websiteMap[site.name.toLowerCase()] = site.id;
         }
 
         // 2. Check database for recent data (within 4 hours) for all websites
-        console.log('Querying cached products...');
         const [rows] = await pool.query<RowDataPacket[]>(
             `SELECT 
                 products.name, 
@@ -44,7 +41,6 @@ app.get('/api/products', (req: Request, res: Response, next) => {
                AND products.updated_at > (NOW() - INTERVAL 4 HOUR)`,
             [q]
         );
-        console.log('Cached products loaded:', rows.length);
 
         if (rows.length > 0) {
             console.log('Returning cached products:');
@@ -52,14 +48,8 @@ app.get('/api/products', (req: Request, res: Response, next) => {
         }
 
         // 3. Scrape new data
-        console.log('Starting Amazon scrape');
         const amazonResults = await scrapeAmazon(q);
-        console.log('Amazon scrape done');
-
-        console.log('Starting eBay scrape');
         const ebayResults = await scrapeEbay(q);
-        console.log('eBay scrape done');
-
         const allResults = [...amazonResults, ...ebayResults];
         console.log('Scraped products:', allResults);
         // 4. Save to database (upsert or insert new) using website_id
