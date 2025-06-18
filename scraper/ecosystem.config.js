@@ -8,7 +8,8 @@ module.exports = {
       watch: false,
       env: {
         NODE_ENV: 'production'
-      }
+      },
+      env_file: '.env' // Adjust path if your .env is in the project root
     }
   ]
 };
