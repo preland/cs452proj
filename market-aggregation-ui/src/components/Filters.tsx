@@ -31,6 +31,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
                 <option value="amazon">Amazon</option>
                 <option value="ebay">eBay</option>
                 <option value="walmart">Walmart</option>
+                <option value="aliexpress">AliExpress</option>
             </select>
             <button
                 onClick={handleApply}

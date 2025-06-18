@@ -5,7 +5,7 @@ import ProductList from './components/ProductList';
 import Filters from './components/Filters';
 import { Product } from './types';
 
-const WEBSITES = ['amazon', 'walmart', 'aliexpress'];
+const WEBSITES = ['amazon', 'walmart', 'aliexpress', 'ebay'];
 
 const App: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -94,9 +94,11 @@ const App: React.FC = () => {
                 {error && <div className="text-center text-red-600">{error}</div>}
                 {failedWebsites.length > 0 && !loading && (
                     <div className="text-center text-yellow-700 bg-yellow-100 border border-yellow-300 rounded py-2 mb-4 font-semibold">
-                        {failedWebsites.map(site =>
-                            <span key={site} className="mx-2">
-                                {site.charAt(0).toUpperCase() + site.slice(1)} results are currently unavailable.
+                        The following are currently unavailable:{" "}
+                        {failedWebsites.map((site, idx) =>
+                            <span key={site}>
+                                {site.charAt(0).toUpperCase() + site.slice(1)}
+                                {idx < failedWebsites.length - 1 ? ', ' : ''}
                             </span>
                         )}
                     </div>
