@@ -62,7 +62,7 @@ app.get('/api/products', (req: Request, res: Response, next) => {
         const walmartResults = await scrapeWalmart(q);
         const aliExpressResults = await scrapeAliExpress(q);
         const allResults = [...amazonResults, ...ebayResults, ...walmartResults, ...aliExpressResults];
-        console.log('Scraped products:', allResults);
+        // console.log('Scraped products:', allResults);
         // 4. Save to database (upsert or insert new) using website_id
         for (const product of allResults) {
             const websiteId = websiteMap[product.website.toLowerCase()];
@@ -89,7 +89,7 @@ app.get('/api/products', (req: Request, res: Response, next) => {
     })().catch(next);
 });
 
-console.log('DB_HOST:', process.env.DB_HOST);
+// console.log('DB_HOST:', process.env.DB_HOST);
 
 app.listen(PORT, () => {
     console.log(`Scraper API listening on port ${PORT}`);
