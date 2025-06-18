@@ -3,9 +3,18 @@ import { Product } from '../types';
 
 interface ProductListProps {
     products: Product[];
+    searchMade?: boolean;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
+const ProductList: React.FC<ProductListProps> = ({ products, searchMade = true }) => {
+    if (!searchMade) {
+        return (
+            <div className="text-center text-gray-400 py-12 text-lg">
+                Start by searching for a product above.
+            </div>
+        );
+    }
+
     if (products.length === 0) {
         return <div className="text-center text-gray-500 py-8">No products found.</div>;
     }
